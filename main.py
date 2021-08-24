@@ -1,6 +1,7 @@
 import discord
 from discord.ext import commands, tasks
 from datetime import datetime
+import database
 
 intents = discord.Intents.default()
 intents.members = True
@@ -32,6 +33,7 @@ async def on_member_join(member):
     filee.close()
     channel = client.get_channel(879397026826166323)
     await channel.send(f'{member} has joined.')
+    database.newUser(member.id)
 
 
 @client.event
@@ -42,6 +44,7 @@ async def on_member_remove(member):
     filee.close()
     channel = client.get_channel(879397026826166323)
     await channel.send(f'{member} has left.')
+    database.userLeave(member.id)
 
 
 @client.event
@@ -149,14 +152,8 @@ async def on_message_edit(before, after):
 
 @client.event
 async def on_message(checkmessage):
-    if checkmessage.author.id == 871809018811809792:
-        filee = open(f'Logs from ' + str(now) + ".txt", "a")
-        filee.write(f'\nGAD MES: {checkmessage.content} Full string of message: {checkmessage}')
-        filee.close()
-        print(f'\nGAD MES: {checkmessage.content}',
-              f' Full string of message: {checkmessage}')
-        channel = client.get_channel(879397026826166323)
-        await channel.send(f'\nGAD MES: **{checkmessage.content}** Full string of message: {checkmessage}')
-    await client.process_commands(checkmessage)
-#make this into message logging
-client.run('TOKEN')
+    if not checkmessage.author.bot:
+        author = checkmessage.author.id
+        old = database.getTotal(author)
+        database.addMessage(UUID=author, oldMessageNum=old)
+client.run('Token')
