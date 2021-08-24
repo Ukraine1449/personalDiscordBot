@@ -7,7 +7,7 @@ PASSWORD = "F5rFojAJrcgUU2VPriSI"
 db_connection = mysql.connect(host=HOST, database=DATABASE, user=USER, password=PASSWORD)
 print("Connected to:", db_connection.get_server_info())
 c = db_connection.cursor()
-c.execute('CREATE TABLE IF NOT EXISTS UserActivity (UUID int, TotalMessages int, Rank int, XP int, PRIMARY KEY (UUID))')
+c.execute('CREATE TABLE IF NOT EXISTS UserActivity(UUID BIGINT, TotalMessages int, UR int, XP int)')
 
 
 def addMessage(UUID, oldMessageNum):
@@ -15,6 +15,17 @@ def addMessage(UUID, oldMessageNum):
     db_connection.commit()
 
 
+def getTotal(UUID):
+    c.execute(f'SELECT TotalMessages FROM UserActivity where UUID ={UUID}')
+    toreturn = c.fetchone().index(0)
+    db_connection.commit()
+    return toreturn
+
+
 def newUser(UUID):
-    c.execute(f"INSERT INTO UserActivity(UUID, TotalMessages, Rank, XP) VALUES ({UUID}, {0}, {0}, {0}) ON DUPLICATE KEY IGNORE")
+    c.execute(f"INSERT INTO UserActivity(UUID) VALUES ({UUID})")
+    db_connection.commit()
+
+def userLeave(UUID):
+    c.execute(f'DELETE FROM UserActivity WHERE UUID={UUID}')
     db_connection.commit()
