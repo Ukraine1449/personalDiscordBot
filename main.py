@@ -154,6 +154,16 @@ async def on_message_edit(before, after):
 async def on_message(checkmessage):
     if not checkmessage.author.bot:
         author = checkmessage.author.id
-        old = database.getTotal(author)
-        database.addMessage(UUID=author, oldMessageNum=old)
-client.run('Token')
+        oldMes = database.getTotalMessages(author)
+        oldXP = database.getTotalXP(author)
+        database.addMessage(UUID=author, oldMessageNum=oldMes, oldXPNum=oldXP)
+
+@client.command()
+async def clear(ctx, ammount=5):
+    await ctx.channel.purge(limit=ammount)
+    print(f'just purged {ammount} messages from {ctx.channel}             full string {ctx}')
+    filee = open(f'Logs from ' + str(now) + ".txt", "a")
+    filee.write(f'\n just purged {ammount} messages from {ctx.channel}             full string {ctx}')
+    filee.close() 
+
+client.run('TOKEN')
