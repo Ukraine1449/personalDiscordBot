@@ -158,12 +158,4 @@ async def on_message(checkmessage):
         oldXP = database.getTotalXP(author)
         database.addMessage(UUID=author, oldMessageNum=oldMes, oldXPNum=oldXP)
 
-@client.command()
-async def clear(ctx, ammount=5):
-    await ctx.channel.purge(limit=ammount)
-    print(f'just purged {ammount} messages from {ctx.channel}             full string {ctx}')
-    filee = open(f'Logs from ' + str(now) + ".txt", "a")
-    filee.write(f'\n just purged {ammount} messages from {ctx.channel}             full string {ctx}')
-    filee.close() 
-
-client.run('TOKEN')
+client.run('ODc5NDY4NjI2Nzk1NjkyMDkz.YSQK_A.9OYw_lrAvPkOosly3_GxxnQkjU0')
